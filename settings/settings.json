@@ -1,0 +1,6 @@
+{
+  "model": "sonnet",
+  "enabledPlugins": {
+    "edmunds-claude-code@edmunds-claude-code": true
+  }
+}
