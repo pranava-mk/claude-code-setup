@@ -1,0 +1,1 @@
+/home/cruxx/docs-repo/claude-global/CLAUDE.md
