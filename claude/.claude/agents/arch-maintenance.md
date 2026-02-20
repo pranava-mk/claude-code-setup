@@ -77,11 +77,14 @@ done
 ```
 
 ### Weekly Maintenance
-1. Check for updates: `paru -Qu`
-2. Check system health: `free -h && df -h`
-3. Check journal errors: `journalctl -p 3 -n 50 --no-pager`
-4. Check failed services: `systemctl --failed`
-5. List orphans: `pacman -Qdtq`
+1. **Check Arch news first**: Fetch https://archlinux.org/news/ and scan for any manual intervention notices before updating. If any exist, read them carefully and warn the user before proceeding with updates.
+2. Check for updates: `paru -Qu`
+3. **Kernel update safety**: If a kernel update (`linux-lts` or `linux`) is in the batch, verify that `intel-ucode` and the matching `linux-lts-headers`/`linux-headers` are also updating alongside it. If intel-ucode is missing from the update batch, flag it as a warning — mismatched microcode caused a boot failure on this system (see `~/Documents/system-issues-fixes/2026-02-13_boot-failure-after-upgrade.md`).
+4. Check system health: `free -h && df -h`
+5. Check journal errors: `journalctl -p 3 -n 50 --no-pager`
+6. Check failed services: `systemctl --failed`
+7. List orphans: `pacman -Qdtq`
+8. Trim cache: `sudo paccache -ruk0`
 
 ### Troubleshooting
 - **DP-1 wallpaper black**: Run `~/.local/lib/hyde/wallpaper.sh --start --backend swww --global`
