@@ -1,9 +1,24 @@
 {
-  "model": "sonnet",
-  "enabledPlugins": {
-    "edmunds-claude-code@edmunds-claude-code": true
-  },
   "permissions": {
     "defaultMode": "bypassPermissions"
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "caveman@caveman": true
+  },
+  "extraKnownMarketplaces": {
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    }
+  },
+  "effortLevel": "medium",
+  "skipDangerousModePermissionPrompt": true,
+  "voiceEnabled": true
 }
