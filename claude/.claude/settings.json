@@ -1,11 +1,33 @@
 {
-  "permissions": {
-    "defaultMode": "bypassPermissions"
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx -y ccstatusline@latest --hook"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx -y ccstatusline@latest --hook"
+          }
+        ]
+      }
+    ]
   },
   "statusLine": {
     "type": "command",
     "command": "npx -y ccstatusline@latest",
-    "padding": 0
+    "padding": 0,
+    "refreshInterval": 60
   },
   "enabledPlugins": {
     "caveman@caveman": true
@@ -18,7 +40,8 @@
       }
     }
   },
-  "effortLevel": "medium",
-  "skipDangerousModePermissionPrompt": true,
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "agentPushNotifEnabled": true,
   "voiceEnabled": true
 }

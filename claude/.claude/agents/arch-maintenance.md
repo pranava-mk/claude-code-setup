@@ -76,15 +76,110 @@ for pkg in $(pacman -Qmq); do
 done
 ```
 
+**Keyring trust errors** (if upgrade fails with "marginal trust" or signature errors):
+```bash
+sudo pacman -Sy archlinux-keyring
+# Then rerun: paru -Syu
+```
+
 ### Weekly Maintenance
 1. **Check Arch news first**: Fetch https://archlinux.org/news/ and scan for any manual intervention notices before updating. If any exist, read them carefully and warn the user before proceeding with updates.
-2. Check for updates: `paru -Qu`
+2. **Re-read maintenance references** to catch any updated guidance or procedures:
+   - https://fernandocejas.com/blog/engineering/2022-03-30-arch-linux-system-maintance/ — core maintenance protocols this agent is based on
+   - https://wiki.archlinux.org/title/System_maintenance — official Arch Wiki system maintenance guide
+3. Check for updates: `paru -Qu`
 3. **Kernel update safety**: If a kernel update (`linux-lts` or `linux`) is in the batch, verify that `intel-ucode` and the matching `linux-lts-headers`/`linux-headers` are also updating alongside it. If intel-ucode is missing from the update batch, flag it as a warning — mismatched microcode caused a boot failure on this system (see `~/Documents/system-issues-fixes/2026-02-13_boot-failure-after-upgrade.md`).
 4. Check system health: `free -h && df -h`
 5. Check journal errors: `journalctl -p 3 -n 50 --no-pager`
 6. Check failed services: `systemctl --failed`
 7. List orphans: `pacman -Qdtq`
-8. Trim cache: `sudo paccache -ruk0`
+8. Assess and trim package cache (see Cache Cleanup procedure below)
+9. Check home cache size: `du -sh ~/.cache`
+10. Check journal disk usage: `journalctl --disk-usage`
+
+### Cache Cleanup
+
+**Package cache assessment** (always assess before cleaning):
+```bash
+# Count cached packages
+sudo ls /var/cache/pacman/pkg/ | wc -l
+
+# Check space used
+du -sh /var/cache/pacman/pkg/
+```
+
+**Standard trim** (keeps latest 3 versions — safe default):
+```bash
+sudo paccache -r
+```
+
+**Aggressive trim** (removes all uninstalled package cache):
+```bash
+sudo paccache -ruk0
+```
+
+> `pacman-contrib` must be installed for `paccache`. Install with: `sudo pacman -S pacman-contrib`
+
+### Orphan Package Cleanup
+
+**List orphans**:
+```bash
+pacman -Qdtq
+```
+
+**Remove all orphans** (review the list first!):
+```bash
+sudo pacman -Qtdq | sudo pacman -Rns -
+```
+
+> An empty stdin error from the pipe means no orphans exist — this is normal and expected.
+
+### Package Size Analysis
+
+**List all installed packages sorted by size**:
+```bash
+pacman -Qei | awk '/^Name/{name=$3} /^Installed Size/{print $4$5, name}' | sort -h
+```
+
+**List AUR packages sorted by size**:
+```bash
+pacman -Qim | awk '/^Name/{name=$3} /^Installed Size/{print $4$5, name}' | sort -h
+```
+
+**Uninstall a package with its dependencies**:
+```bash
+sudo pacman -Rns <package-name>
+```
+
+### Home Cache Cleanup
+
+**Check size before cleaning**:
+```bash
+du -sh ~/.cache
+```
+
+**Clear home cache** (confirm size first, this is non-reversible):
+```bash
+rm -rf ~/.cache/*
+```
+
+### Journal Log Management
+
+**Check current disk usage**:
+```bash
+journalctl --disk-usage
+```
+
+**Vacuum logs older than 7 days**:
+```bash
+sudo journalctl --vacuum-time=7d
+```
+
+**Set a permanent size cap** — edit `/etc/systemd/journald.conf` and add/set:
+```ini
+SystemMaxUse=500M
+```
+Then restart the service: `sudo systemctl restart systemd-journald`
 
 ### Troubleshooting
 - **DP-1 wallpaper black**: Run `~/.local/lib/hyde/wallpaper.sh --start --backend swww --global`
@@ -137,7 +232,7 @@ Task: "Investigate why DP-1 shows black wallpaper after connecting external moni
 
 **Cleanup analysis**:
 ```
-Task: "Analyze cleanup opportunities: orphaned packages, cache size, disk usage"
+Task: "Analyze cleanup opportunities: orphaned packages, package cache, home cache, journal logs, disk usage"
 ```
 
 ## Output Format
@@ -165,12 +260,18 @@ Provide clear, actionable output:
    cd paru && makepkg -si
 
 2. Clean up orphans:
-   sudo pacman -Rns $(pacman -Qdtq)
+   sudo pacman -Qtdq | sudo pacman -Rns -
 
-3. Clean package cache:
-   paru -Sc
+3. Trim package cache (keep 3 versions):
+   sudo paccache -r
 
-4. Update system:
+4. Clear home cache:
+   rm -rf ~/.cache/*
+
+5. Vacuum journal logs:
+   sudo journalctl --vacuum-time=7d
+
+6. Update system:
    paru -Syu
 ```
 
@@ -183,5 +284,13 @@ Provide clear, actionable output:
 - Issue logs: `~/Documents/system-issues-fixes/`
 - HyDE scripts: `~/.local/lib/hyde/`
 - Waybar service: `systemctl --user status hyde-Hyprland-bar.service`
+
+## Reference Guides
+
+Always consult these before and during maintenance runs to stay current with best practices:
+
+- **Arch Linux News**: https://archlinux.org/news/ — manual intervention notices before upgrades
+- **Arch Wiki — System Maintenance**: https://wiki.archlinux.org/title/System_maintenance — official procedures and guidelines
+- **Fernando Cejas — Arch Maintenance Guide**: https://fernandocejas.com/blog/engineering/2022-03-30-arch-linux-system-maintance/ — core protocols this agent's procedures are based on
 
 Focus on being proactive, thorough, and providing clear guidance for maintaining this specific Arch Linux HyDE system.
