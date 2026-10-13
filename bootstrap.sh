@@ -24,6 +24,8 @@ fi
 echo "==> Stowing claude-code-setup..."
 cd "$CLAUDE_SETUP_DIR"
 stow claude
+# ccstatusline reads ~/.config/ccstatusline, not ~/.claude, so it is its own package.
+stow ccstatusline
 
 echo "==> Stowing archyde-prefs packages..."
 cd "$ARCHYDE_PREFS_DIR"
