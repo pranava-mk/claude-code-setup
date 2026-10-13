@@ -1,7 +1,10 @@
 # claude-code-setup
 
-My user-level Claude Code config (`~/.claude/`), kept as a GNU Stow package.
-`claude/.claude/` mirrors `~/.claude/` one-to-one.
+My user-level Claude Code config, kept as GNU Stow packages:
+
+- `claude/` mirrors `~/.claude/` one-to-one.
+- `ccstatusline/` holds the status line layout, which ccstatusline reads from
+  `~/.config/ccstatusline/`, not `~/.claude/`.
 
 ## What's in it
 
@@ -29,10 +32,11 @@ cd ~/Projects/claude-code-setup
 
 # Option A: symlink everything with stow (repo becomes the live config)
 sudo pacman -S --needed stow
-stow -t ~ claude
+stow -t ~ claude ccstatusline
 
 # Option B: copy
 cp -r claude/.claude/. ~/.claude/
+mkdir -p ~/.config/ccstatusline && cp ccstatusline/.config/ccstatusline/settings.json ~/.config/ccstatusline/
 
 # Status line dependencies
 npm --prefix ~/.claude/tools ci
