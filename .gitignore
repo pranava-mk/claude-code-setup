@@ -29,3 +29,6 @@ projects/
 # OS / editor noise
 .DS_Store
 *~
+
+# npm deps for tools/ (reinstall with: npm --prefix ~/.claude/tools ci)
+node_modules/

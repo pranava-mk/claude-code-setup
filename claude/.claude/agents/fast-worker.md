@@ -1,6 +1,6 @@
 ---
 name: fast-worker
-description: "Fast mechanical-task agent for grep, search, rename, reformat, file listing, log parsing, and simple transforms. Low-cost Haiku model. Use for anything that doesn't require reasoning about code correctness."
+description: "Fast mechanical worker on Haiku for non-code chores: log parsing, file inventory, counting/sorting/deduplicating data, simple text transforms. No reasoning about code correctness. For locating code (where is X, what calls Y) use cavecrew-investigator or Explore instead."
 model: haiku
 tools: Read, Bash, Glob, Grep
 maxTurns: 20

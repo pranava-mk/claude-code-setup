@@ -1,6 +1,6 @@
 ---
 name: verifier
-description: "High-risk code reviewer using Opus. Only invoked by frontier-orchestrator for: auth flows, payment/money paths, DB migrations, security-sensitive changes, API contract validation. Read-only — never edits files."
+description: "High-risk code reviewer on Opus at max effort. Use only for: auth flows, payment/money paths, DB migrations, security-sensitive changes, API contract validation. Read-only — never edits files. For routine diff review use cavecrew-reviewer or /code-review instead."
 model: opus
 tools: Read, Bash, Glob, Grep
 maxTurns: 30
