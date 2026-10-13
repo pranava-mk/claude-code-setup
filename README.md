@@ -47,8 +47,10 @@ herdr integration install claude
 ```
 
 > `bootstrap.sh` predates the Omarchy move: it expects the clone at
-> `~/claude-code-setup` and stows `archyde-prefs` packages that are now empty.
-> Use the steps above until it is rewritten.
+> `~/claude-code-setup`, and runs `stow system-issues` in `archyde-prefs`,
+> a package renamed to `archyde-issues-fixes`. Use the steps above until it
+> is rewritten. The global `~/.claude/CLAUDE.md` lives in `archyde-prefs`
+> (`claude-global/.claude/CLAUDE.md`), not in this repo.
 
 ### Machine-specific bits in `settings.json`
 
@@ -72,7 +74,7 @@ well-scoped work to cheaper or more specialised subagents.
 | `implementer` | Sonnet | Multi-file implementation from a clear spec (3+ files, features, refactors) |
 | `verifier` | Opus, max effort | Read-only review of high-risk changes: auth, money, migrations, security, API contracts |
 | `fast-worker` | Haiku | Non-code chores: log parsing, file inventory, sorting/deduping, text transforms |
-| `arch-maintenance` | Sonnet | Arch system maintenance (**still HyDE-era, needs an Omarchy rewrite**) |
+| `arch-maintenance` | Sonnet | Arch system maintenance on the HyDE setup |
 | `design-fetch` | Sonnet | Generate a `Style.md` design-system doc from a project or URL |
 
 These sit alongside built-in and plugin agents. Pick the narrowest one:
