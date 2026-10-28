@@ -1,11 +1,20 @@
 ---
 name: cruxx-map
-description: Map any repository into Jake Van Clief's three-layer context architecture (root CLAUDE.md map with a routing table, a CONTEXT.md per room, skills/reference loaded on demand), written as rich markdown (tables, mermaid diagrams, callouts). Scans the repo first, then asks the user targeted questions before writing anything. Use for "cruxx map", "/cruxx-map", "map this repo", "set up context for this repo", "add CLAUDE.md and CONTEXT.md files", "routing table", "Clief / ICM / three-layer architecture", or to refresh or audit an existing map.
+description: Cut context-window use while improving answer quality: map any repository into Jake Van Clief's three-layer context architecture (root CLAUDE.md map with a routing table, a CONTEXT.md per room, skills/reference loaded on demand), written as rich markdown (tables, mermaid diagrams, callouts). Scans the repo first, then asks the user targeted questions before writing anything. Use for "cruxx map", "/cruxx-map", "map this repo", "set up context for this repo", "add CLAUDE.md and CONTEXT.md files", "routing table", "Clief / ICM / three-layer architecture", or to refresh or audit an existing map.
 ---
 
 # cruxx-map
 
 Turn a repository into a three-layer context system so an agent reads only what a task needs.
+
+## Goal: less context, better answers
+
+Every decision in this skill serves two aims at once:
+
+1. **Shrink the context window footprint.** Only the map loads every session. A task loads the map, one room and the files its routing row names, typically 2k to 8k tokens, instead of the agent exploring with dozens of file reads and greps that can reach 30k to 50k.
+2. **Raise answer quality.** The tokens that do load are dense and pre-digested: the real flow, the files that matter, the patterns to copy, the traps. Less noise means the model attends to what matters, so answers get better, not just cheaper.
+
+So "rich" means **high information per token**, never long. A mermaid diagram that replaces three paragraphs is rich. A table that replaces exploring ten files is rich. Decoration, restated code, generic advice and anything the agent could infer from one file read are waste: cut them.
 
 | Layer | File | Loaded | Answers | Budget |
 |---|---|---|---|---|
@@ -71,6 +80,9 @@ Use the templates in this skill folder as starting shapes, not fill-in forms:
 
 Rules:
 
+- **Every line earns its tokens.** Before keeping a line, ask: would the agent otherwise need extra reads or guesses to learn this? If not, cut it. Write what the code cannot say quickly (why, where things connect, what breaks); never restate what one file read shows. Prefer a table row or diagram node over a sentence, and a sentence over a paragraph.
+- **Push detail down a layer.** Anything needed only for some tasks moves from `CLAUDE.md` to a room, and from a room to `REFERENCES.md`. Layer 1 is paid on every prompt; Layer 3 only when used.
+- **Routing rows name precise files**, not folders, so the agent reads 2 to 4 files instead of exploring a directory.
 - **CLAUDE.md is a router, not a manual.** Identity (1 to 3 lines), commands, rooms list, routing table, conventions, rules. Detailed explanation belongs in a room or in references. Merge any existing instructions you were told to keep, preserving their wording.
 - **Every path in a routing row or "files that matter" list must exist.** No invented files, no placeholders. A row with nothing to read yet says `(none)`.
 - **One CLAUDE.md per repo.** Rooms get `CONTEXT.md`, never their own `CLAUDE.md`. Say this to the user once when you create the first room, because people expect one per folder. (Monorepo exception: a package that is opened as its own project may keep a `CLAUDE.md`; ask first.)
@@ -94,5 +106,7 @@ Run these checks before reporting done, and in Audit mode:
 4. Mermaid blocks parse: if `npx -y @mermaid-js/mermaid-cli` is available, render each block to `/dev/null`; otherwise check node IDs are unquoted identifiers and labels with special characters are in quotes.
 5. No secrets copied from `.env*` or config into any markdown.
 6. Routing table has at least 5 rows and each row's Go to is a listed room or `/`.
+7. **Token footprint.** Estimate tokens as `wc -c` / 4. Report: (a) always-loaded cost (root `CLAUDE.md`), target ≤ ~800; (b) per-task cost for each routing row (map + room + listed files), target ≤ ~8k; (c) for comparison, the size of what the agent would otherwise skim (the room's folder, or all of `git ls-files` for root tasks). A row over budget means its Read list is too broad: narrow it.
+8. **Density pass.** Re-read each written file once and delete lines that restate code, repeat the map, or give generic advice.
 
-Report: files written, line counts, check results, and any routing rows marked `(none)` that the user should fill in later. Do not commit unless the user asks.
+Report: files written, line counts, the token footprint table from check 7, check results, and any routing rows marked `(none)` that the user should fill in later. Do not commit unless the user asks.
