@@ -13,6 +13,10 @@ claude/.claude/
 ├── settings.json        model, hooks, status line, plugins, voice, theme
 ├── agents/              custom subagents (see "Orchestration" below)
 ├── skills/find-skills/  discover/install skills from skills.sh (vercel-labs/skills)
+├── skills/cruxx-map/    map any repo into Jake Van Clief's three-layer context
+│                        architecture (CLAUDE.md router, CONTEXT.md per room,
+│                        references); scans first, asks, then writes
+│                        rich markdown. Modes: build, refresh, audit.
 └── tools/               npm deps for the status line (ccstatusline)
 ```
 
