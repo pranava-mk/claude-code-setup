@@ -17,6 +17,9 @@ claude/.claude/
 │                        architecture (CLAUDE.md router, CONTEXT.md per room,
 │                        references); scans first, asks, then writes
 │                        rich markdown. Modes: build, refresh, audit.
+├── skills/cruxx-learn-ultra/  turn a topic, repo or docs into one HTML course
+│                        at the learner's level, every fact linked to its
+│                        source. Works in any agent.
 └── tools/               npm deps for the status line (ccstatusline)
 ```
 
@@ -97,6 +100,31 @@ more. To make sure a task is delegated, name the agent: *"use implementer
 for this"*, *"have verifier review the migration"*.
 
 ## Skills
+
+### Install my skills in any agent
+
+**With a prompt.** Paste this into Claude Code, Kiro, Codex, Cursor, Copilot,
+Gemini CLI, OpenCode or any other agent:
+
+```
+Install the cruxx-learn-ultra skill: read https://raw.githubusercontent.com/pranava-mk/claude-code-setup/main/INSTALL-SKILL.md and follow it.
+```
+
+Change `cruxx-learn-ultra` to `cruxx-map` or `find-skills` for the other
+skills. The agent reads [`INSTALL-SKILL.md`](INSTALL-SKILL.md), which tells it
+the right skills folder for its own tool.
+
+**With a command** (needs Node.js; installs for every agent it finds):
+
+```bash
+npx skills add https://github.com/pranava-mk/claude-code-setup/tree/main/claude/.claude/skills/cruxx-learn-ultra -g -y
+```
+
+`skills.sh.json` points the `skills` CLI at `claude/.claude/skills/`, so
+`npx skills add pranava-mk/claude-code-setup -s cruxx-learn-ultra -g -y` also
+works.
+
+### Add a skill to this repo
 
 Install global skills with `--copy`, so they are real directories that git
 can track rather than symlinks into `~/.agents/skills`:
