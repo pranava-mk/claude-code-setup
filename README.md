@@ -51,6 +51,18 @@ The agent shows the parts (skills, subagents, settings, status line), you pick,
 and it installs them. It backs up every file before it changes it, and merges
 `settings.json` instead of overwriting it. See [`INSTALL.md`](INSTALL.md).
 
+**Script** (no AI agent needed):
+
+```bash
+git clone https://github.com/pranava-mk/claude-code-setup.git ~/Projects/claude-code-setup
+bash ~/Projects/claude-code-setup/bootstrap.sh
+```
+
+[`bootstrap.sh`](bootstrap.sh) uses stow if it can (or copies), backs up files it
+would replace, fixes the home and node paths in `settings.json` (copy mode),
+installs the status line dependencies, the herdr hook if herdr exists, and
+the global `CLAUDE.md` from `archyde-prefs`.
+
 **Commands.** The repo is a set of GNU Stow packages:
 
 - `claude/` mirrors `~/.claude/` one-to-one.
