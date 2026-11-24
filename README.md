@@ -107,12 +107,12 @@ for this"*, *"have verifier review the migration"*.
 Gemini CLI, OpenCode or any other agent:
 
 ```
-Install the cruxx-learn-ultra skill: read https://raw.githubusercontent.com/pranava-mk/claude-code-setup/main/INSTALL-SKILL.md and follow it.
+Install skills from pranava-mk/claude-code-setup: read https://raw.githubusercontent.com/pranava-mk/claude-code-setup/main/INSTALL-SKILL.md and follow it.
 ```
 
-Change `cruxx-learn-ultra` to `cruxx-map` or `find-skills` for the other
-skills. The agent reads [`INSTALL-SKILL.md`](INSTALL-SKILL.md), which tells it
-the right skills folder for its own tool.
+The agent reads [`INSTALL-SKILL.md`](INSTALL-SKILL.md), lists the skills,
+asks which ones you want, and installs them in the right folder for its own
+tool.
 
 **With a command** (needs Node.js; installs for every agent it finds):
 

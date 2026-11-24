@@ -1,12 +1,22 @@
 # Install a skill from this repo (instructions for an AI agent)
 
-You are an AI coding agent. The user asked you to install an Agent Skill from
+You are an AI coding agent. The user asked you to install Agent Skills from
 the public repo `pranava-mk/claude-code-setup`. Follow these steps in order.
 
-The user named the skill in their prompt. If they did not, use
-`cruxx-learn-ultra`. Below, `<skill>` means that name.
+## Step 0: Let the user pick
 
-Available skills: `cruxx-learn-ultra`, `cruxx-map`, `find-skills`.
+Show the user this list and ask which skills to install. They can pick one,
+several, or all. Use your question UI if you have one; otherwise print the
+list and wait for the reply.
+
+| Skill | What it does |
+|---|---|
+| `cruxx-learn-ultra` | Turns a topic, repo or docs into one HTML course at the learner's level, every fact linked to its source |
+| `cruxx-map` | Maps a repo into a three-layer context structure (CLAUDE.md router, CONTEXT.md per area, references) |
+| `find-skills` | Finds and installs agent skills from skills.sh |
+
+Do Steps 1 to 3 for each skill the user picks. Below, `<skill>` means that
+skill's name.
 
 ## Rules
 
