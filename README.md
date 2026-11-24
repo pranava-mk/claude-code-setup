@@ -1,37 +1,61 @@
 # claude-code-setup
 
-My user-level Claude Code config, kept as GNU Stow packages:
+My user-level Claude Code config: skills, subagents, settings and status line.
+The skills work in any agent. The rest is Claude Code config.
+
+Every section below starts with a **prompt** you paste into your agent, then
+gives the **commands** if you prefer to do it by hand.
+
+## Skills
+
+**Prompt** (Claude Code, Kiro, Codex, Cursor, Copilot, Gemini CLI, OpenCode or
+any other agent):
+
+```
+Install skills from pranava-mk/claude-code-setup: read https://raw.githubusercontent.com/pranava-mk/claude-code-setup/main/INSTALL-SKILL.md and follow it.
+```
+
+The agent lists the skills, asks which ones you want, and installs them in the
+correct folder for its own tool. See [`INSTALL-SKILL.md`](INSTALL-SKILL.md).
+
+| Skill | What it does |
+|---|---|
+| [`cruxx-learn-ultra`](claude/.claude/skills/cruxx-learn-ultra/SKILL.md) | Turns a topic, repo or docs into one HTML course at the learner's level, every fact linked to its source |
+| [`cruxx-map`](claude/.claude/skills/cruxx-map/SKILL.md) | Maps a repo into Jake Van Clief's three-layer context architecture (CLAUDE.md router, CONTEXT.md per room, references). Scans, asks, then writes. Modes: build, refresh, audit |
+| [`find-skills`](claude/.claude/skills/find-skills/SKILL.md) | Finds and installs skills from skills.sh (vercel-labs/skills) |
+
+**Commands** (need Node.js; install for every agent the CLI finds):
+
+```bash
+# Pick from a list
+npx skills add pranava-mk/claude-code-setup -g
+
+# One skill
+npx skills add https://github.com/pranava-mk/claude-code-setup/tree/main/claude/.claude/skills/cruxx-learn-ultra -g -y
+
+# All skills
+npx skills add pranava-mk/claude-code-setup -s '*' -g -y
+```
+
+`skills.sh.json` points the `skills` CLI at `claude/.claude/skills/`.
+
+## Full setup
+
+**Prompt** (in Claude Code; other agents get the skills only):
+
+```
+Set up my agent from pranava-mk/claude-code-setup: read https://raw.githubusercontent.com/pranava-mk/claude-code-setup/main/INSTALL.md and follow it.
+```
+
+The agent shows the parts (skills, subagents, settings, status line), you pick,
+and it installs them. It backs up every file before it changes it, and merges
+`settings.json` instead of overwriting it. See [`INSTALL.md`](INSTALL.md).
+
+**Commands.** The repo is a set of GNU Stow packages:
 
 - `claude/` mirrors `~/.claude/` one-to-one.
 - `ccstatusline/` holds the status line layout, which ccstatusline reads from
   `~/.config/ccstatusline/`, not `~/.claude/`.
-
-## What's in it
-
-```
-claude/.claude/
-├── settings.json        model, hooks, status line, plugins, voice, theme
-├── agents/              custom subagents (see "Orchestration" below)
-├── skills/find-skills/  discover/install skills from skills.sh (vercel-labs/skills)
-├── skills/cruxx-map/    map any repo into Jake Van Clief's three-layer context
-│                        architecture (CLAUDE.md router, CONTEXT.md per room,
-│                        references); scans first, asks, then writes
-│                        rich markdown. Modes: build, refresh, audit.
-├── skills/cruxx-learn-ultra/  turn a topic, repo or docs into one HTML course
-│                        at the learner's level, every fact linked to its
-│                        source. Works in any agent.
-└── tools/               npm deps for the status line (ccstatusline)
-```
-
-Not tracked on purpose: credentials, history, sessions, caches, `plugins/`
-(reinstalled from the marketplace) and `projects/` (per-project state and
-memory). See `.gitignore`.
-
-## Install
-
-Stow is not installed on the current machine, so the repo is synced **by
-copying**: after changing anything in `~/.claude/`, copy it into
-`claude/.claude/` and commit. On a fresh machine:
 
 ```bash
 git clone git@github.com:pranava-mk/claude-code-setup.git ~/Projects/claude-code-setup
@@ -53,24 +77,19 @@ npm --prefix ~/.claude/tools ci
 herdr integration install claude
 ```
 
-> `bootstrap.sh` predates the Omarchy move: it expects the clone at
-> `~/claude-code-setup`, and runs `stow system-issues` in `archyde-prefs`,
-> a package renamed to `archyde-issues-fixes`. Use the steps above until it
-> is rewritten. The global `~/.claude/CLAUDE.md` lives in `archyde-prefs`
-> (`claude-global/.claude/CLAUDE.md`), not in this repo.
+## Subagents
 
-### Machine-specific bits in `settings.json`
+**Prompt** (Claude Code):
 
-- `statusLine.command` uses absolute paths: the mise node shim
-  (`~/.local/share/mise/shims/node`) and `~/.claude/tools/node_modules`.
-  This avoids `npx -y ccstatusline@latest` downloading on every refresh. Adjust
-  the paths if node or the home directory differ.
-- The `SessionStart` hook calls `~/.claude/hooks/herdr-agent-state.sh`. It
-  exits quietly when not running inside herdr.
-- `autoMode.environment` is **not** committed. Claude Code generates it per
-  machine, and it names private project paths. This repo is public.
+```
+Install only the subagents from pranava-mk/claude-code-setup: read https://raw.githubusercontent.com/pranava-mk/claude-code-setup/main/INSTALL.md and follow it.
+```
 
-## Orchestration
+**Command:**
+
+```bash
+cp claude/.claude/agents/*.md ~/.claude/agents/
+```
 
 The **main session is the orchestrator**: Opus at high effort
 (`"model": "opus"`, `"effortLevel": "high"`). It plans, then hands
@@ -99,37 +118,47 @@ Claude Code delegates sparingly by default: subagents start cold and cost
 more. To make sure a task is delegated, name the agent: *"use implementer
 for this"*, *"have verifier review the migration"*.
 
-## Skills
+## Settings and status line
 
-### Install my skills in any agent
-
-**With a prompt.** Paste this into Claude Code, Kiro, Codex, Cursor, Copilot,
-Gemini CLI, OpenCode or any other agent:
+**Prompt** (Claude Code):
 
 ```
-Install skills from pranava-mk/claude-code-setup: read https://raw.githubusercontent.com/pranava-mk/claude-code-setup/main/INSTALL-SKILL.md and follow it.
+Install only the settings and status line from pranava-mk/claude-code-setup: read https://raw.githubusercontent.com/pranava-mk/claude-code-setup/main/INSTALL.md and follow it.
 ```
 
-The agent reads [`INSTALL-SKILL.md`](INSTALL-SKILL.md), lists the skills,
-asks which ones you want, and installs them in the right folder for its own
-tool.
+`settings.json` sets the model, effort, hooks, status line, the caveman plugin,
+voice and theme. The status line is ccstatusline, installed locally in
+`~/.claude/tools/`.
 
-**With a command** (needs Node.js; installs for every agent it finds):
+Machine-specific values in `settings.json`:
 
-```bash
-npx skills add https://github.com/pranava-mk/claude-code-setup/tree/main/claude/.claude/skills/cruxx-learn-ultra -g -y
-```
+- `statusLine.command` uses absolute paths: the mise node shim
+  (`~/.local/share/mise/shims/node`) and `~/.claude/tools/node_modules`.
+  This avoids `npx -y ccstatusline@latest` downloading on every refresh. Adjust
+  the paths if node or the home directory differ.
+- The `SessionStart` hook calls `~/.claude/hooks/herdr-agent-state.sh`. It
+  exits quietly when not running inside herdr.
+- `autoMode.environment` is **not** committed. Claude Code generates it per
+  machine, and it names private project paths. This repo is public.
 
-`skills.sh.json` points the `skills` CLI at `claude/.claude/skills/`, so
-`npx skills add pranava-mk/claude-code-setup -s cruxx-learn-ultra -g -y` also
-works.
+The global `~/.claude/CLAUDE.md` lives in `archyde-prefs`
+(`claude-global/.claude/CLAUDE.md`), not in this repo.
 
-### Add a skill to this repo
+## Maintaining this repo
 
-Install global skills with `--copy`, so they are real directories that git
-can track rather than symlinks into `~/.agents/skills`:
+Stow is not installed on the current machine, so the repo is synced **by
+copying**: after changing anything in `~/.claude/`, copy it into
+`claude/.claude/` and commit.
+
+To add a skill, install it globally with `--copy`, so it is a real directory
+that git can track rather than a symlink into `~/.agents/skills`. Then add it
+to the skill tables in this README and in `INSTALL-SKILL.md`.
 
 ```bash
 npx skills add <owner/repo> -s <skill> -a claude-code -g -y --copy
 cp -r ~/.claude/skills/<skill> ~/Projects/claude-code-setup/claude/.claude/skills/
 ```
+
+Not tracked on purpose: credentials, history, sessions, caches, `plugins/`
+(reinstalled from the marketplace) and `projects/` (per-project state and
+memory). See `.gitignore`.
